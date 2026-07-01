@@ -1,0 +1,67 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Smoking Zubehör",
+      "description": "Verbrauchsmaterial für Raucher",
+      "axis": "frank",
+      "online_available": true
+    },
+    {
+      "id": 2,
+      "name": "Premium Pfeifen",
+      "description": "High-End Raucher-Zubehör",
+      "axis": "sven",
+      "online_available": true
+    },
+    {
+      "id": 3,
+      "name": "Growbox Equipment",
+      "description": "Anbau-Ausrüstung",
+      "axis": "frank",
+      "online_available": true
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Griptape XL",
+      "description": "Hochwertiges Griptape für Wasserpfeifen",
+      "price": 4.99,
+      "stock": 50,
+      "category_id": 1,
+      "image_url": "/images/griptape.jpg",
+      "online_available": true,
+      "offline_available": true,
+      "persona_tags": ["tobias", "nico"]
+    },
+    {
+      "id": 2,
+      "name": "Meerschaum Pfeife Premium",
+      "description": "Handgefertigte Meerschaum-Pfeife aus Türkei",
+      "price": 49.99,
+      "stock": 12,
+      "category_id": 2,
+      "image_url": "/images/meerschaum.jpg",
+      "online_available": true,
+      "offline_available": true,
+      "persona_tags": ["sven", "sandra"]
+    },
+    {
+      "id": 3,
+      "name": "LED Grow Light 600W",
+      "description": "Vollspektrum LED für Pflanzenanbau",
+      "price": 189.99,
+      "stock": 8,
+      "category_id": 3,
+      "image_url": "/images/growlight.jpg",
+      "online_available": true,
+      "offline_available": false,
+      "persona_tags": ["frank", "julia"]
+    }
+  ],
+  "users": [],
+  "orders": [],
+  "orderItems": [],
+  "cartItems": []
+}
