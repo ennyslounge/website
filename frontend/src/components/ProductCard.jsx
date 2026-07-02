@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Card from './Card';
 
 const colors = {
@@ -8,7 +9,36 @@ const colors = {
   gold: '#C9A961',
 };
 
-export default function ProductCard({ product, onAddToCart }) {
+export default function ProductCard({ product, onAddToCart, user, onFavoriteToggle }) {
+  const [isFavorited, setIsFavorited] = useState(
+    user?.favorites?.some(fav => fav.id === product.id) || false
+  );
+  const [loadingFavorite, setLoadingFavorite] = useState(false);
+
+  const handleFavoriteClick = async () => {
+    if (!user) {
+      alert('Bitte logge dich ein, um Favoriten zu speichern!');
+      return;
+    }
+
+    setLoadingFavorite(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3001/api/auth/favorites/${product.id}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        setIsFavorited(!isFavorited);
+        onFavoriteToggle?.();
+      }
+    } catch (err) {
+      console.error('Fehler beim Favorit-Toggle:', err);
+    } finally {
+      setLoadingFavorite(false);
+    }
+  };
   return (
     <Card>
       {/* Image Section */}
@@ -27,6 +57,28 @@ export default function ProductCard({ product, onAddToCart }) {
         borderRadius: '1rem 1rem 0 0',
       }}>
         <div style={{ fontSize: '5rem', opacity: 0.3 }}>📦</div>
+
+        {/* Favoriten Button */}
+        <button
+          onClick={handleFavoriteClick}
+          disabled={loadingFavorite}
+          style={{
+            position: 'absolute',
+            top: '0.75rem',
+            left: '0.75rem',
+            background: 'none',
+            border: 'none',
+            fontSize: '1.75rem',
+            cursor: loadingFavorite ? 'not-allowed' : 'pointer',
+            opacity: loadingFavorite ? 0.6 : 1,
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => !loadingFavorite && (e.currentTarget.style.transform = 'scale(1.2)')}
+          onMouseLeave={(e) => !loadingFavorite && (e.currentTarget.style.transform = 'scale(1)')}
+          title={isFavorited ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}
+        >
+          {isFavorited ? '❤️' : '🤍'}
+        </button>
         {product.category_id === 1 && (
           <div style={{
             position: 'absolute',

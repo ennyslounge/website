@@ -161,6 +161,97 @@ async function start() {
     }
   });
 
+  // Favoriten hinzufügen/entfernen
+  app.post('/api/auth/favorites/:productId', verifyToken, async (req, res) => {
+    try {
+      await db.read();
+      const user = db.data.users.find(u => u.id === req.user.id);
+      const product = db.data.products.find(p => p.id === parseInt(req.params.productId));
+
+      if (!user || !product) {
+        return res.status(404).json({ error: 'User oder Produkt nicht gefunden' });
+      }
+
+      if (!user.favorites) {
+        user.favorites = [];
+      }
+
+      const isFavorite = user.favorites.some(fav => fav.id === product.id);
+
+      if (isFavorite) {
+        // Aus Favoriten entfernen
+        user.favorites = user.favorites.filter(fav => fav.id !== product.id);
+      } else {
+        // Zu Favoriten hinzufügen
+        user.favorites.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+        });
+      }
+
+      await db.write();
+      res.json({
+        message: isFavorite ? 'Aus Favoriten entfernt' : 'Zu Favoriten hinzugefügt',
+        favorites: user.favorites,
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Aktualisieren der Favoriten' });
+    }
+  });
+
+  // Bestellung erstellen (nach Checkout)
+  app.post('/api/orders', verifyToken, async (req, res) => {
+    try {
+      await db.read();
+      const user = db.data.users.find(u => u.id === req.user.id);
+      const { items, total, shippingAddress, shippingCost } = req.body;
+
+      if (!user) {
+        return res.status(404).json({ error: 'User nicht gefunden' });
+      }
+
+      const newOrder = {
+        id: Math.max(...(db.data.orders?.map(o => o.id) || [0]), 0) + 1,
+        userId: user.id,
+        items,
+        total,
+        shippingCost,
+        shippingAddress,
+        status: 'processing',
+        createdAt: new Date(),
+      };
+
+      if (!db.data.orders) {
+        db.data.orders = [];
+      }
+
+      db.data.orders.push(newOrder);
+
+      // Bestellung zum User hinzufügen
+      if (!user.orders) {
+        user.orders = [];
+      }
+
+      user.orders.push({
+        id: newOrder.id,
+        items,
+        total,
+        status: 'processing',
+        createdAt: newOrder.createdAt,
+      });
+
+      await db.write();
+
+      res.status(201).json({
+        message: 'Bestellung erstellt!',
+        order: newOrder,
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Erstellen der Bestellung' });
+    }
+  });
+
   // 2️⃣ KATEGORIEN
   app.get('/api/categories', async (req, res) => {
     try {

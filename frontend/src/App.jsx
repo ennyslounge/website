@@ -26,6 +26,25 @@ export default function App() {
     }
   }, []);
 
+  // Favoriten aktualisieren nach Toggle
+  const handleFavoriteToggle = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const response = await fetch('http://localhost:3001/api/auth/profile', {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const updatedUser = await response.json();
+          setUser(updatedUser);
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        }
+      } catch (err) {
+        console.error('Fehler beim Aktualisieren der Favoriten:', err);
+      }
+    }
+  };
+
   // Produkte vom Backend laden
   useEffect(() => {
     fetch('http://localhost:3001/api/products')
@@ -144,6 +163,8 @@ export default function App() {
               <ProductList
                 products={filteredProducts}
                 onAddToCart={addToCart}
+                user={user}
+                onFavoriteToggle={handleFavoriteToggle}
               />
             </div>
             <Footer onNavigate={setPage} />
@@ -223,6 +244,9 @@ export default function App() {
                   step={2}
                   onBack={() => setCheckoutStep(1)}
                   onNext={() => setCheckoutStep(3)}
+                  cartItems={cartItems}
+                  total={cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}
+                  user={user}
                 />
               )}
 
@@ -236,6 +260,9 @@ export default function App() {
                     setCheckoutStep(1);
                     setPage('home');
                   }}
+                  cartItems={cartItems}
+                  total={cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}
+                  user={user}
                 />
               )}
             </div>
