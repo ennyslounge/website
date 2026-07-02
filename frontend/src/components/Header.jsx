@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Card from './Card';
 
 const colors = {
@@ -8,7 +9,20 @@ const colors = {
   gold: '#C9A961',
 };
 
-export default function Header({ cartCount, onNavigate, currentPage, onLogoClick, user }) {
+export default function Header({ cartCount, onNavigate, currentPage, onLogoClick, user, onCategorySelect }) {
+  const [showCatalogMenu, setShowCatalogMenu] = useState(false);
+
+  const categories = [
+    { id: 1, name: 'Smoking Zubehör', axis: 'Frank-Achse' },
+    { id: 2, name: 'Premium Pfeifen', axis: 'Sven-Achse' },
+    { id: 3, name: 'Growbox Equipment', axis: 'Frank-Achse' },
+  ];
+
+  const handleCategoryClick = (categoryId) => {
+    onCategorySelect?.(categoryId);
+    onNavigate('shop');
+    setShowCatalogMenu(false);
+  };
   return (
     <header style={{
       backgroundColor: colors.cream,
@@ -152,26 +166,79 @@ export default function Header({ cartCount, onNavigate, currentPage, onLogoClick
         {/* Navigation Row - Customer Friendly */}
         <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' }}>
 
-          {/* Left: Categories */}
-          <div style={{ display: 'flex', gap: '2rem', fontSize: '0.875rem', flexWrap: 'wrap' }}>
-            {['Glas & Rauchgeräte', 'Grinder', 'Vaporizer', 'Beleuchtung', 'Dünger', 'Seeds'].map(cat => (
-              <button
-                key={cat}
-                onClick={() => onNavigate('shop')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: colors.dark,
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = colors.logoGreen}
-                onMouseLeave={(e) => e.currentTarget.style.color = colors.dark}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* Left: Catalog Dropdown */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowCatalogMenu(!showCatalogMenu)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: colors.dark,
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                padding: '0.5rem 1rem',
+                borderRadius: '0.5rem',
+                transition: 'all 0.2s',
+                backgroundColor: showCatalogMenu ? colors.cream : 'transparent',
+              }}
+              onMouseEnter={(e) => !showCatalogMenu && (e.currentTarget.style.backgroundColor = 'rgba(201, 169, 97, 0.1)')}
+              onMouseLeave={(e) => !showCatalogMenu && (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
+              📚 Katalog {showCatalogMenu ? '▲' : '▼'}
+            </button>
+
+            {/* Dropdown Menu */}
+            {showCatalogMenu && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                backgroundColor: colors.cream,
+                border: `2px solid ${colors.logoGreen}`,
+                borderRadius: '0.5rem',
+                marginTop: '0.5rem',
+                minWidth: '280px',
+                boxShadow: '0 4px 12px rgba(75, 90, 60, 0.15)',
+                zIndex: 100,
+              }}>
+                <div style={{ padding: '0.75rem 0' }}>
+                  {categories.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => handleCategoryClick(cat.id)}
+                      style={{
+                        width: '100%',
+                        background: 'none',
+                        border: 'none',
+                        padding: '0.75rem 1.5rem',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        color: colors.dark,
+                        fontSize: '0.875rem',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(75, 90, 60, 0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
+                        {cat.name}
+                      </div>
+                      <div style={{
+                        fontSize: '0.75rem',
+                        color: colors.textOlive,
+                      }}>
+                        {cat.axis}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right: Bundles & Guides Button */}

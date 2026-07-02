@@ -102,6 +102,7 @@ export default function App() {
         currentPage={page}
         onLogoClick={() => setPage('home')}
         user={user}
+        onCategorySelect={setSelectedCategory}
       />
 
       <main className="flex-grow">
@@ -118,46 +119,40 @@ export default function App() {
           <>
             <div className="max-w-7xl mx-auto px-6 py-12">
               <div className="mb-10">
-                <h1 className="text-5xl font-bold font-display text-ennys-dark mb-4">
+                <h1 style={{
+                  fontSize: '3rem',
+                  fontWeight: 'bold',
+                  fontFamily: 'Georgia, serif',
+                  marginBottom: '1rem',
+                  color: '#1a3a2a',
+                }}>
                   Sortiment
                 </h1>
-                <p className="text-ennys-brown text-lg mb-6">
-                  Entdecke unser Angebot für Eigenversorger und Profis
-                </p>
-
-                {/* Kategorie Filter */}
-                <div className="flex gap-3 flex-wrap">
-                  <button
-                    onClick={() => setSelectedCategory(null)}
-                    className={`px-4 py-2 rounded-lg font-semibold transition ${
-                      selectedCategory === null
-                        ? 'bg-ennys-green text-ennys-cream'
-                        : 'bg-ennys-cream text-ennys-green border border-ennys-green'
-                    }`}
-                  >
-                    Alle
-                  </button>
-                  {[1, 2, 3].map(catId => {
-                    const catName = {
-                      1: 'Smoking Zubehör',
-                      2: 'Premium Pfeifen',
-                      3: 'Growbox Equipment',
-                    }[catId];
-                    return (
-                      <button
-                        key={catId}
-                        onClick={() => setSelectedCategory(catId)}
-                        className={`px-4 py-2 rounded-lg font-semibold transition ${
-                          selectedCategory === catId
-                            ? 'bg-ennys-green text-ennys-cream'
-                            : 'bg-ennys-cream text-ennys-green border border-ennys-green'
-                        }`}
+                <p style={{
+                  fontSize: '1.125rem',
+                  marginBottom: '1.5rem',
+                  color: '#6D4E2E',
+                }}>
+                  {selectedCategory ? (
+                    <span>
+                      Kategorie angezeigt · <button
+                        onClick={() => setSelectedCategory(null)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#C9A961',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          fontWeight: '600',
+                        }}
                       >
-                        {catName}
+                        Alle Produkte anzeigen
                       </button>
-                    );
-                  })}
-                </div>
+                    </span>
+                  ) : (
+                    'Entdecke unser Angebot für Eigenversorger und Profis'
+                  )}
+                </p>
               </div>
 
               <ProductList
