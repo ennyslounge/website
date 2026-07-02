@@ -8,7 +8,7 @@ const colors = {
   gold: '#C9A961',
 };
 
-export default function Header({ cartCount, onNavigate, currentPage, onLogoClick }) {
+export default function Header({ cartCount, onNavigate, currentPage, onLogoClick, user }) {
   return (
     <header style={{
       backgroundColor: colors.cream,
@@ -75,19 +75,41 @@ export default function Header({ cartCount, onNavigate, currentPage, onLogoClick
 
           {/* Right Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <button
-              onClick={() => onNavigate('home')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: colors.dark,
-                fontWeight: '600',
-                cursor: 'pointer',
-                fontSize: '0.9rem',
-              }}
-            >
-              Konto
-            </button>
+            {user ? (
+              <button
+                onClick={() => onNavigate('account')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: colors.logoGreen,
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = colors.dark}
+                onMouseLeave={(e) => e.currentTarget.style.color = colors.logoGreen}
+              >
+                👤 {user.name}
+              </button>
+            ) : (
+              <button
+                onClick={() => onNavigate('login')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: colors.dark,
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = colors.gold}
+                onMouseLeave={(e) => e.currentTarget.style.color = colors.dark}
+              >
+                🔐 Login
+              </button>
+            )}
 
             <button
               onClick={() => onNavigate('cart')}

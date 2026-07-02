@@ -5,14 +5,26 @@ import ProductList from './components/ProductList';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import Footer from './components/Footer';
+import Login from './components/Login';
+import Register from './components/Register';
+import Account from './components/Account';
 
 export default function App() {
-  const [page, setPage] = useState('home'); // home, shop, cart, checkout
+  const [page, setPage] = useState('home'); // home, shop, cart, checkout, login, register, account
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [checkoutStep, setCheckoutStep] = useState(1); // 1: Warenkorb, 2: Versand, 3: Zahlung
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [user, setUser] = useState(null);
+
+  // Beim Starten überprüfen, ob User bereits logged in ist
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   // Produkte vom Backend laden
   useEffect(() => {
@@ -70,6 +82,7 @@ export default function App() {
         onNavigate={setPage}
         currentPage={page}
         onLogoClick={() => setPage('home')}
+        user={user}
       />
 
       <main className="flex-grow">
@@ -133,6 +146,34 @@ export default function App() {
                 onAddToCart={addToCart}
               />
             </div>
+            <Footer onNavigate={setPage} />
+          </>
+        )}
+
+        {/* LOGIN PAGE */}
+        {page === 'login' && (
+          <>
+            <Login onLogin={setUser} onNavigate={setPage} />
+            <Footer onNavigate={setPage} />
+          </>
+        )}
+
+        {/* REGISTER PAGE */}
+        {page === 'register' && (
+          <>
+            <Register onLogin={setUser} onNavigate={setPage} />
+            <Footer onNavigate={setPage} />
+          </>
+        )}
+
+        {/* ACCOUNT PAGE */}
+        {page === 'account' && user && (
+          <>
+            <Account
+              user={user}
+              onNavigate={setPage}
+              onLogout={() => setUser(null)}
+            />
             <Footer onNavigate={setPage} />
           </>
         )}
