@@ -11,12 +11,23 @@ const colors = {
 
 export default function Header({ cartCount, onNavigate, currentPage, onLogoClick, user, onCategorySelect }) {
   const [showCatalogMenu, setShowCatalogMenu] = useState(false);
+  const [expandedParent, setExpandedParent] = useState(null);
 
   const categories = [
-    { id: 1, name: 'Smoking Zubehör', axis: 'Frank-Achse' },
-    { id: 2, name: 'Premium Pfeifen', axis: 'Sven-Achse' },
-    { id: 3, name: 'Growbox Equipment', axis: 'Frank-Achse' },
+    { id: 1, name: 'Headshop', icon: '🏪', parentId: null },
+    { id: 11, name: 'Glas & Rauchgeräte', parentId: 1 },
+    { id: 12, name: 'Grinder', parentId: 1 },
+    { id: 13, name: 'Vaporizer', parentId: 1 },
+    { id: 14, name: 'Premium Pfeifen', parentId: 1 },
+    { id: 2, name: 'Growstore', icon: '🌱', parentId: null },
+    { id: 21, name: 'Beleuchtung', parentId: 2 },
+    { id: 22, name: 'Dünger & Substrate', parentId: 2 },
+    { id: 23, name: 'Seeds', parentId: 2 },
+    { id: 24, name: 'Growbox Equipment', parentId: 2 },
   ];
+
+  const parentCategories = categories.filter(c => c.parentId === null);
+  const getSubcategories = (parentId) => categories.filter(c => c.parentId === parentId);
 
   const handleCategoryClick = (categoryId) => {
     onCategorySelect?.(categoryId);
@@ -198,43 +209,85 @@ export default function Header({ cartCount, onNavigate, currentPage, onLogoClick
                 border: `2px solid ${colors.logoGreen}`,
                 borderRadius: '0.5rem',
                 marginTop: '0.5rem',
-                minWidth: '280px',
+                minWidth: '320px',
                 boxShadow: '0 4px 12px rgba(75, 90, 60, 0.15)',
                 zIndex: 100,
               }}>
-                <div style={{ padding: '0.75rem 0' }}>
-                  {categories.map(cat => (
-                    <button
-                      key={cat.id}
-                      onClick={() => handleCategoryClick(cat.id)}
-                      style={{
-                        width: '100%',
-                        background: 'none',
-                        border: 'none',
-                        padding: '0.75rem 1.5rem',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        color: colors.dark,
-                        fontSize: '0.875rem',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = 'rgba(75, 90, 60, 0.1)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                      }}
-                    >
-                      <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
-                        {cat.name}
-                      </div>
-                      <div style={{
-                        fontSize: '0.75rem',
-                        color: colors.textOlive,
-                      }}>
-                        {cat.axis}
-                      </div>
-                    </button>
+                <div style={{ padding: '0.5rem 0' }}>
+                  {parentCategories.map(parent => (
+                    <div key={parent.id}>
+                      {/* Hauptkategorie */}
+                      <button
+                        onClick={() => setExpandedParent(expandedParent === parent.id ? null : parent.id)}
+                        style={{
+                          width: '100%',
+                          background: 'none',
+                          border: 'none',
+                          padding: '1rem 1.5rem',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          color: colors.dark,
+                          fontSize: '1rem',
+                          fontWeight: '700',
+                          backgroundColor: expandedParent === parent.id ? 'rgba(75, 90, 60, 0.15)' : 'transparent',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (expandedParent !== parent.id) {
+                            e.currentTarget.style.backgroundColor = 'rgba(75, 90, 60, 0.08)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (expandedParent !== parent.id) {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                          }
+                        }}
+                      >
+                        <span>{parent.icon} {parent.name}</span>
+                        <span style={{ fontSize: '0.75rem' }}>
+                          {expandedParent === parent.id ? '▲' : '▼'}
+                        </span>
+                      </button>
+
+                      {/* Unterkategorien */}
+                      {expandedParent === parent.id && (
+                        <div style={{
+                          backgroundColor: 'rgba(75, 90, 60, 0.05)',
+                          borderLeft: `3px solid ${colors.logoGreen}`,
+                        }}>
+                          {getSubcategories(parent.id).map(subcat => (
+                            <button
+                              key={subcat.id}
+                              onClick={() => handleCategoryClick(subcat.id)}
+                              style={{
+                                width: '100%',
+                                background: 'none',
+                                border: 'none',
+                                padding: '0.75rem 1.5rem 0.75rem 2.5rem',
+                                textAlign: 'left',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                color: colors.textOlive,
+                                fontSize: '0.875rem',
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = 'rgba(75, 90, 60, 0.1)';
+                                e.currentTarget.style.color = colors.dark;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                                e.currentTarget.style.color = colors.textOlive;
+                              }}
+                            >
+                              → {subcat.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>

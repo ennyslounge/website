@@ -2,23 +2,74 @@
   "categories": [
     {
       "id": 1,
-      "name": "Smoking Zubehör",
-      "description": "Verbrauchsmaterial für Raucher",
-      "axis": "frank",
+      "name": "Headshop",
+      "description": "Raucher-Zubehör & Lifestyle",
+      "parentId": null,
+      "online_available": true,
+      "icon": "🏪"
+    },
+    {
+      "id": 11,
+      "name": "Glas & Rauchgeräte",
+      "description": "Hochwertige Glas-Artikel",
+      "parentId": 1,
+      "online_available": true
+    },
+    {
+      "id": 12,
+      "name": "Grinder",
+      "description": "Mühlen & Zerkleinerung",
+      "parentId": 1,
+      "online_available": true
+    },
+    {
+      "id": 13,
+      "name": "Vaporizer",
+      "description": "Verdampfer & Zubehör",
+      "parentId": 1,
+      "online_available": true
+    },
+    {
+      "id": 14,
+      "name": "Premium Pfeifen",
+      "description": "Hochwertige Pfeifen",
+      "parentId": 1,
       "online_available": true
     },
     {
       "id": 2,
-      "name": "Premium Pfeifen",
-      "description": "High-End Raucher-Zubehör",
-      "axis": "sven",
+      "name": "Growstore",
+      "description": "Anbau & Gartenbedarf",
+      "parentId": null,
+      "online_available": true,
+      "icon": "🌱"
+    },
+    {
+      "id": 21,
+      "name": "Beleuchtung",
+      "description": "LED & Grow Lights",
+      "parentId": 2,
       "online_available": true
     },
     {
-      "id": 3,
+      "id": 22,
+      "name": "Dünger & Substrate",
+      "description": "Nährstoffe & Erde",
+      "parentId": 2,
+      "online_available": true
+    },
+    {
+      "id": 23,
+      "name": "Seeds",
+      "description": "Samen & Kerne",
+      "parentId": 2,
+      "online_available": true
+    },
+    {
+      "id": 24,
       "name": "Growbox Equipment",
-      "description": "Anbau-Ausrüstung",
-      "axis": "frank",
+      "description": "Komplette Systeme",
+      "parentId": 2,
       "online_available": true
     }
   ],
@@ -29,11 +80,11 @@
       "description": "Hochwertiges Griptape für Wasserpfeifen",
       "price": 4.99,
       "stock": 50,
-      "category_id": 1,
+      "category_id": 11,
       "image_url": "/images/griptape.jpg",
       "online_available": true,
       "offline_available": true,
-      "persona_tags": ["tobias", "nico"]
+      "persona_tags": ["anfänger", "budget"]
     },
     {
       "id": 2,
@@ -41,11 +92,11 @@
       "description": "Handgefertigte Meerschaum-Pfeife aus Türkei",
       "price": 49.99,
       "stock": 12,
-      "category_id": 2,
+      "category_id": 14,
       "image_url": "/images/meerschaum.jpg",
       "online_available": true,
       "offline_available": true,
-      "persona_tags": ["sven", "sandra"]
+      "persona_tags": ["premium", "sammler"]
     },
     {
       "id": 3,
@@ -53,11 +104,11 @@
       "description": "Vollspektrum LED für Pflanzenanbau",
       "price": 189.99,
       "stock": 8,
-      "category_id": 3,
+      "category_id": 21,
       "image_url": "/images/growlight.jpg",
       "online_available": true,
       "offline_available": false,
-      "persona_tags": ["frank", "julia"]
+      "persona_tags": ["profi", "setup"]
     }
   ],
   "users": [
