@@ -11,30 +11,47 @@
     {
       "id": 11,
       "name": "Glas & Rauchgeräte",
-      "description": "Hochwertige Glas-Artikel",
-      "parentId": 1,
-      "online_available": true
+      "parentId": 1
     },
     {
       "id": 12,
       "name": "Grinder",
-      "description": "Mühlen & Zerkleinerung",
-      "parentId": 1,
-      "online_available": true
+      "parentId": 1
     },
     {
       "id": 13,
       "name": "Vaporizer",
-      "description": "Verdampfer & Zubehör",
-      "parentId": 1,
-      "online_available": true
+      "parentId": 1
     },
     {
       "id": 14,
       "name": "Premium Pfeifen",
-      "description": "Hochwertige Pfeifen",
-      "parentId": 1,
-      "online_available": true
+      "parentId": 1
+    },
+    {
+      "id": 15,
+      "name": "Bong Shop",
+      "parentId": 1
+    },
+    {
+      "id": 16,
+      "name": "Papers & Filter",
+      "parentId": 1
+    },
+    {
+      "id": 17,
+      "name": "Feuerzeuge & Zubehör",
+      "parentId": 1
+    },
+    {
+      "id": 18,
+      "name": "Aufbewahrung",
+      "parentId": 1
+    },
+    {
+      "id": 19,
+      "name": "Lifestyle & Geschenke",
+      "parentId": 1
     },
     {
       "id": 2,
@@ -47,30 +64,37 @@
     {
       "id": 21,
       "name": "Beleuchtung",
-      "description": "LED & Grow Lights",
-      "parentId": 2,
-      "online_available": true
+      "parentId": 2
     },
     {
       "id": 22,
       "name": "Dünger & Substrate",
-      "description": "Nährstoffe & Erde",
-      "parentId": 2,
-      "online_available": true
+      "parentId": 2
     },
     {
       "id": 23,
       "name": "Seeds",
-      "description": "Samen & Kerne",
-      "parentId": 2,
-      "online_available": true
+      "parentId": 2
     },
     {
       "id": 24,
       "name": "Growbox Equipment",
-      "description": "Komplette Systeme",
-      "parentId": 2,
-      "online_available": true
+      "parentId": 2
+    },
+    {
+      "id": 25,
+      "name": "Lüftung & Klima",
+      "parentId": 2
+    },
+    {
+      "id": 26,
+      "name": "Messinstrumente",
+      "parentId": 2
+    },
+    {
+      "id": 27,
+      "name": "Bewässerung",
+      "parentId": 2
     }
   ],
   "products": [

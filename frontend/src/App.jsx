@@ -11,20 +11,35 @@ import Account from './components/Account';
 import Admin from './components/Admin';
 
 export default function App() {
-  const [page, setPage] = useState('home'); // home, shop, cart, checkout, login, register, account
+  const [page, setPage] = useState('home'); // home, shop, cart, checkout, login, register, account, admin
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-  const [checkoutStep, setCheckoutStep] = useState(1); // 1: Warenkorb, 2: Versand, 3: Zahlung
+  const [checkoutStep, setCheckoutStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [user, setUser] = useState(null);
 
-  // Beim Starten überprüfen, ob User bereits logged in ist
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+
+    // Lade Kategorien und Produkte
+    Promise.all([
+      fetch('http://localhost:3001/api/categories').then(r => r.json()),
+      fetch('http://localhost:3001/api/products').then(r => r.json()),
+    ])
+      .then(([catsData, prodsData]) => {
+        setCategories(catsData);
+        setProducts(prodsData);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Fehler beim Laden:', err);
+        setLoading(false);
+      });
   }, []);
 
   // Favoriten aktualisieren nach Toggle
@@ -104,6 +119,7 @@ export default function App() {
         onLogoClick={() => setPage('home')}
         user={user}
         onCategorySelect={setSelectedCategory}
+        categories={categories}
       />
 
       <main className="flex-grow">
