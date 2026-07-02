@@ -45,6 +45,16 @@ function verifyToken(req, res, next) {
   }
 }
 
+// Admin-Check Middleware
+function verifyAdmin(req, res, next) {
+  verifyToken(req, res, () => {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ error: 'Admin-Rechte erforderlich' });
+    }
+    next();
+  });
+}
+
 // ==========================================
 // DATENBANK INITIALISIEREN (beim Start)
 // ==========================================
@@ -368,6 +378,118 @@ async function start() {
       res.json({ message: 'Produkt gelöscht', deleted: deleted[0] });
     } catch (error) {
       res.status(500).json({ error: 'Fehler beim Löschen des Produkts' });
+    }
+  });
+
+  // ==========================================
+  // 🔐 ADMIN PANEL - PRODUKT-VERWALTUNG
+  // ==========================================
+
+  // Admin: Alle Produkte (mit Details)
+  app.get('/api/admin/products', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      res.json(db.data.products);
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Abrufen der Produkte' });
+    }
+  });
+
+  // Admin: Produkt erstellen
+  app.post('/api/admin/products', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const newProduct = {
+        id: Math.max(...db.data.products.map(p => p.id), 0) + 1,
+        name: req.body.name,
+        description: req.body.description || '',
+        price: parseFloat(req.body.price),
+        stock: parseInt(req.body.stock) || 0,
+        category_id: parseInt(req.body.category_id),
+        image_url: req.body.image_url || '/images/placeholder.jpg',
+        online_available: req.body.online_available !== false,
+        offline_available: req.body.offline_available !== false,
+        persona_tags: req.body.persona_tags || [],
+      };
+
+      db.data.products.push(newProduct);
+      await db.write();
+
+      res.status(201).json({
+        message: 'Produkt erstellt!',
+        product: newProduct,
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Erstellen des Produkts' });
+    }
+  });
+
+  // Admin: Produkt aktualisieren
+  app.put('/api/admin/products/:id', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const product = db.data.products.find(p => p.id === parseInt(req.params.id));
+
+      if (!product) {
+        return res.status(404).json({ error: 'Produkt nicht gefunden' });
+      }
+
+      Object.assign(product, {
+        name: req.body.name || product.name,
+        description: req.body.description || product.description,
+        price: req.body.price !== undefined ? parseFloat(req.body.price) : product.price,
+        stock: req.body.stock !== undefined ? parseInt(req.body.stock) : product.stock,
+        category_id: req.body.category_id || product.category_id,
+        image_url: req.body.image_url || product.image_url,
+        online_available: req.body.online_available !== undefined ? req.body.online_available : product.online_available,
+        offline_available: req.body.offline_available !== undefined ? req.body.offline_available : product.offline_available,
+        persona_tags: req.body.persona_tags || product.persona_tags,
+      });
+
+      await db.write();
+      res.json({ message: 'Produkt aktualisiert!', product });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Aktualisieren des Produkts' });
+    }
+  });
+
+  // Admin: Produkt löschen
+  app.delete('/api/admin/products/:id', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const index = db.data.products.findIndex(p => p.id === parseInt(req.params.id));
+
+      if (index === -1) {
+        return res.status(404).json({ error: 'Produkt nicht gefunden' });
+      }
+
+      const deleted = db.data.products.splice(index, 1);
+      await db.write();
+
+      res.json({ message: 'Produkt gelöscht!', deleted: deleted[0] });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Löschen des Produkts' });
+    }
+  });
+
+  // Admin: Alle Kategorien
+  app.get('/api/admin/categories', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      res.json(db.data.categories);
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Abrufen der Kategorien' });
+    }
+  });
+
+  // Admin: Bestellungen anschauen
+  app.get('/api/admin/orders', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const orders = db.data.orders || [];
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Abrufen der Bestellungen' });
     }
   });
 

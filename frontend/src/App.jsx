@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import Register from './components/Register';
 import Account from './components/Account';
+import Admin from './components/Admin';
 
 export default function App() {
   const [page, setPage] = useState('home'); // home, shop, cart, checkout, login, register, account
@@ -190,6 +191,14 @@ export default function App() {
               onNavigate={setPage}
               onLogout={() => setUser(null)}
             />
+            <Footer onNavigate={setPage} />
+          </>
+        )}
+
+        {/* ADMIN PAGE */}
+        {page === 'admin' && (
+          <>
+            <Admin user={user} onNavigate={setPage} />
             <Footer onNavigate={setPage} />
           </>
         )}

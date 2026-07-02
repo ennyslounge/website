@@ -204,9 +204,26 @@ export default function Account({ user, onNavigate, onLogout }) {
                 borderRadius: '0.5rem',
                 border: `1px solid ${colors.gold}`,
               }}>
-                <p style={{ color: colors.gold, fontWeight: '600' }}>
+                <p style={{ color: colors.gold, fontWeight: '600', marginBottom: '1rem' }}>
                   🔑 Admin-Funktionen verfügbar
                 </p>
+                <button
+                  onClick={() => onNavigate('admin')}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    backgroundColor: colors.gold,
+                    color: colors.dark,
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  🔧 Zum Admin Panel
+                </button>
               </div>
             )}
           </div>
