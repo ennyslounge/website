@@ -9,6 +9,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Account from './components/Account';
 import Admin from './components/Admin';
+import ShopSidebar from './components/ShopSidebar';
 
 export default function App() {
   const [page, setPage] = useState('home'); // home, shop, cart, checkout, login, register, account, admin
@@ -19,6 +20,9 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [user, setUser] = useState(null);
+  const [sortBy, setSortBy] = useState('default');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -101,10 +105,28 @@ export default function App() {
     }
   };
 
-  // Gefilterte Produkte
-  const filteredProducts = selectedCategory
+  // Gefilterte und sortierte Produkte
+  let filteredProducts = selectedCategory
     ? products.filter(p => p.category_id === selectedCategory)
     : products;
+
+  // Sortierung
+  if (sortBy === 'price-asc') {
+    filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
+  } else if (sortBy === 'price-desc') {
+    filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
+  } else if (sortBy === 'name') {
+    filteredProducts = [...filteredProducts].sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === 'newest') {
+    filteredProducts = [...filteredProducts].reverse();
+  }
+
+  // Paginierung
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   if (loading) {
     return <div className="flex items-center justify-center h-screen text-lg text-ennys-dark">Lädt...</div>;
@@ -134,50 +156,94 @@ export default function App() {
         {/* SHOP PAGE */}
         {page === 'shop' && (
           <>
-            <div className="max-w-7xl mx-auto px-6 py-12">
-              <div className="mb-10">
-                <h1 style={{
-                  fontSize: '3rem',
-                  fontWeight: 'bold',
-                  fontFamily: 'Georgia, serif',
-                  marginBottom: '1rem',
-                  color: '#1a3a2a',
-                }}>
-                  Sortiment
-                </h1>
-                <p style={{
-                  fontSize: '1.125rem',
-                  marginBottom: '1.5rem',
-                  color: '#6D4E2E',
-                }}>
-                  {selectedCategory ? (
-                    <span>
-                      Kategorie angezeigt · <button
-                        onClick={() => setSelectedCategory(null)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#C9A961',
-                          cursor: 'pointer',
-                          textDecoration: 'underline',
-                          fontWeight: '600',
-                        }}
-                      >
-                        Alle Produkte anzeigen
-                      </button>
-                    </span>
-                  ) : (
-                    'Entdecke unser Angebot für Eigenversorger und Profis'
-                  )}
-                </p>
-              </div>
+            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '2rem' }}>
+                {/* Sidebar */}
+                <ShopSidebar
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onCategorySelect={(catId) => {
+                    setSelectedCategory(catId);
+                    setCurrentPage(1);
+                  }}
+                  sortBy={sortBy}
+                  onSortChange={(sort) => {
+                    setSortBy(sort);
+                    setCurrentPage(1);
+                  }}
+                />
 
-              <ProductList
-                products={filteredProducts}
-                onAddToCart={addToCart}
-                user={user}
-                onFavoriteToggle={handleFavoriteToggle}
-              />
+                {/* Main Content */}
+                <div>
+                  <div style={{ marginBottom: '2rem' }}>
+                    <h1 style={{
+                      fontSize: '2.25rem',
+                      fontWeight: 'bold',
+                      fontFamily: 'Georgia, serif',
+                      marginBottom: '0.5rem',
+                      color: '#1a3a2a',
+                    }}>
+                      Sortiment
+                    </h1>
+                    <p style={{
+                      fontSize: '0.95rem',
+                      color: '#6D4E2E',
+                      marginBottom: '1rem',
+                    }}>
+                      {filteredProducts.length} Produkte gefunden
+                      {selectedCategory && ' · Kategorie gefiltert'}
+                    </p>
+                  </div>
+
+                  {/* Product Grid */}
+                  <ProductList
+                    products={paginatedProducts}
+                    onAddToCart={addToCart}
+                    user={user}
+                    onFavoriteToggle={handleFavoriteToggle}
+                  />
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      marginTop: '2rem',
+                      flexWrap: 'wrap',
+                    }}>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          style={{
+                            padding: '0.75rem 1rem',
+                            backgroundColor: currentPage === page ? '#4B5A3C' : '#D9CCBA',
+                            color: currentPage === page ? '#D9CCBA' : '#1a3a2a',
+                            border: 'none',
+                            borderRadius: '0.5rem',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                          }}
+                          onMouseEnter={(e) => {
+                            if (currentPage !== page) {
+                              e.currentTarget.style.backgroundColor = 'rgba(75, 90, 60, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (currentPage !== page) {
+                              e.currentTarget.style.backgroundColor = '#D9CCBA';
+                            }
+                          }}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
             <Footer onNavigate={setPage} />
           </>
