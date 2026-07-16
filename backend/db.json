@@ -29,11 +29,6 @@
       "parentId": 1
     },
     {
-      "id": 15,
-      "name": "Bong Shop",
-      "parentId": 1
-    },
-    {
       "id": 16,
       "name": "Papers & Filter",
       "parentId": 1
@@ -108,7 +103,10 @@
       "image_url": "/images/griptape.jpg",
       "online_available": true,
       "offline_available": true,
-      "persona_tags": ["anfänger", "budget"]
+      "persona_tags": [
+        "anfänger",
+        "budget"
+      ]
     },
     {
       "id": 2,
@@ -120,7 +118,10 @@
       "image_url": "/images/meerschaum.jpg",
       "online_available": true,
       "offline_available": true,
-      "persona_tags": ["premium", "sammler"]
+      "persona_tags": [
+        "premium",
+        "sammler"
+      ]
     },
     {
       "id": 3,
@@ -132,7 +133,10 @@
       "image_url": "/images/growlight.jpg",
       "online_available": true,
       "offline_available": false,
-      "persona_tags": ["profi", "setup"]
+      "persona_tags": [
+        "profi",
+        "setup"
+      ]
     }
   ],
   "users": [
@@ -149,5 +153,15 @@
   ],
   "orders": [],
   "orderItems": [],
-  "cartItems": []
+  "cartItems": [],
+  "guides": [
+    {
+      "id": 1,
+      "title": "Wie Cannabis wirkt: Die Wissenschaft hinter der Pflanze",
+      "category": "Grundlagen",
+      "content": "# Wie Cannabis wirkt: Die Wissenschaft hinter der Pflanze\n\n## Einführung: Cannabis und das Gehirn\n\nIn den vergangenen Jahren hat sich das wissenschaftliche Verständnis der Hanfpflanze durch umfangreiche Forschung deutlich erweitert. Ein Großteil dieser Forschung konzentriert sich auf die Wirkung der pflanzlichen Inhaltsstoffe im zentralen Nervensystem.\n\nCannabis ist psychoaktiv – das heißt, es beeinflusst Wahrnehmung, Stimmung und kognitive Prozesse. Diese Eigenschaft wird vor allem durch THC-reiche Sorten vermittelt, im Unterschied zu Faserhanf (Industriehanf), der nur sehr geringe THC-Gehalte aufweist und rechtlich anders eingeordnet wird.\n\n## Cannabis und psychoaktive Wirkungen\n\nÜber die Wirkungen von Cannabis auf Verhalten, Stimmung und soziales Miteinander gibt es zahlreiche Studien, aber auch ebenso viele offene Fragen. Effekte sind stark dosis-, konsummuster- und personenabhängig und lassen sich nicht pauschal bewerten. Genau diese Varianz ist einer der Gründe, warum verantwortungsvoller Umgang und Aufklärung zentral sind.\n\n## Die Wirkstoffe: Cannabinoide und Terpene\n\nDie am besten erforschten Cannabinoide sind:\n\n- **THC (Tetrahydrocannabinol)** – Hauptverantwortlich für die psychoaktiven Effekte, wirkt über die Cannabinoid-Rezeptoren CB1 (v. a. im Gehirn) und CB2 (v. a. im Immunsystem).\n- **CBD (Cannabidiol)** – nicht berauschend, mit potenziell angstlösenden, entzündungshemmenden und antikonvulsiven Eigenschaften, die in mehreren klinischen Kontexten untersucht werden.\n\nDaneben enthält die Pflanze über 100 weitere Cannabinoide (z. B. CBG, CBN, THCV) sowie eine Vielzahl an Terpenen. Diese treten nicht additiv, sondern in Wechselwirkung auf – ein Effekt, der in der Forschung als **Entourage-Effekt** diskutiert wird.\n\n## Physiologische Effekte\n\nCannabis kann verschiedene physiologische Effekte hervorrufen:\n\n- **Herzfrequenz und Blutdruck:** Kurzfristige Erhöhung der Herzfrequenz, teils auch orthostatische Blutdruckveränderungen.\n- **Stimmung:** Mögliche Entspannung und Stimmungsaufhellung, aber auch Angst, Unruhe oder Panik – insbesondere bei hohen Dosen.\n- **Schlaf:** Kann kurzfristig das Einschlafen erleichtern; bei regelmäßigem Langzeitkonsum kann die Schlafqualität jedoch beeinträchtigt werden.\n- **Gedächtnis und Konzentration:** Akute Beeinträchtigung von Kurzzeitgedächtnis, Aufmerksamkeit und Reaktionsgeschwindigkeit.\n\n## Cannabis in der medizinischen Geschichte\n\nCannabis wurde bereits seit Jahrtausenden in Asien als Heilpflanze eingesetzt; schriftliche Belege dafür reichen in China mehrere Jahrhunderte vor unsere Zeitrechnung zurück.\n\nIn den USA war Cannabis bis 1942 offiziell in der amtlichen Pharmakopöe als Arzneimittel gelistet. Die Entdeckung des körpereigenen Endocannabinoid-Systems hat das medizinische und wissenschaftliche Interesse an der Pflanze ab den 1990er-Jahren neu belebt.\n\n## Wichtige Erkenntnisse und Risiken\n\nCannabis kann für einen Teil der Konsumierenden therapeutisch wirksam oder subjektiv hilfreich sein – die Eignung ist jedoch individuell sehr unterschiedlich.\n\nBesondere Vorsicht ist in folgenden Fällen wissenschaftlich gut belegt:\n\n- **Psychische Vorerkrankungen:** Bei familiärer oder persönlicher Prädisposition für Psychosen ist ein erhöhtes Psychoserisiko einer der am besten belegten Risikofaktoren.\n- **Jugendliche und junges Erwachsenenalter:** Das Gehirn ist bis etwa Mitte 20 in der Ausreifung.\n- **Hohes Konsumprofil:** Häufigkeit, Dosis und THC-Gehalt beeinflussen sowohl akute als auch langfristige Risiken deutlich.\n\n---\n\n*Dieser Artikel dient der allgemeinen Aufklärung und ersetzt keine medizinische Beratung.*",
+      "order": 1,
+      "createdAt": "2026-07-03T00:00:00.000Z"
+    }
+  ]
 }

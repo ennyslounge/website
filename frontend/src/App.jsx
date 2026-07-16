@@ -133,16 +133,67 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f5f1e8', display: 'flex', flexDirection: 'column' }}>
-      <Header
-        cartCount={cartItems.length}
-        onNavigate={setPage}
-        currentPage={page}
-        onLogoClick={() => setPage('home')}
-        user={user}
-        onCategorySelect={setSelectedCategory}
-        categories={categories}
-      />
+    <div style={{
+      minHeight: '100vh',
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* Full-screen background */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundImage: 'url(/bg-pattern.png)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center top',
+        zIndex: -1,
+      }} />
+
+      {/* Content wrapper */}
+      <div style={{
+        flex: 1,
+        position: 'relative',
+        zIndex: 1,
+      }}>
+      {/* Header mit Bild im Hintergrund */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        height: '280px',
+        backgroundColor: '#D9CCBA',
+      }}>
+        {/* Hintergrund-Bild */}
+        <img
+          src="/header-bg.png"
+          alt="Enny's Lounge & Grow Store"
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            zIndex: 0,
+          }}
+        />
+
+        {/* Header-Navigation oben drüber */}
+        <div style={{ position: 'relative', zIndex: 10 }}>
+          <Header
+            cartCount={cartItems.length}
+            onNavigate={setPage}
+            currentPage={page}
+            onLogoClick={() => setPage('home')}
+            user={user}
+            onCategorySelect={setSelectedCategory}
+            categories={categories}
+          />
+        </div>
+      </div>
+
 
       <main className="flex-grow">
         {/* HOME PAGE */}
@@ -157,7 +208,11 @@ export default function App() {
         {page === 'shop' && (
           <>
             <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '2rem' }}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '280px 1fr',
+                gap: '2rem'
+              }}>
                 {/* Sidebar */}
                 <ShopSidebar
                   categories={categories}
@@ -356,6 +411,7 @@ export default function App() {
           </>
         )}
       </main>
+      </div>
     </div>
   );
 }

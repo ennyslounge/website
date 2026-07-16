@@ -10,13 +10,16 @@ const colors = {
 };
 
 export default function Admin({ user, onNavigate }) {
-  const [tab, setTab] = useState('products'); // products, categories, orders
+  const [tab, setTab] = useState('products'); // products, categories, orders, guides
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [guides, setGuides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [editingGuide, setEditingGuide] = useState(null);
   const [formData, setFormData] = useState({});
+  const [guideFormData, setGuideFormData] = useState({});
 
   useEffect(() => {
     fetchData();
@@ -25,15 +28,17 @@ export default function Admin({ user, onNavigate }) {
   const fetchData = async () => {
     const token = localStorage.getItem('token');
     try {
-      const [productsRes, categoriesRes, ordersRes] = await Promise.all([
+      const [productsRes, categoriesRes, ordersRes, guidesRes] = await Promise.all([
         fetch('http://localhost:3001/api/admin/products', { headers: { 'Authorization': `Bearer ${token}` } }),
         fetch('http://localhost:3001/api/admin/categories', { headers: { 'Authorization': `Bearer ${token}` } }),
         fetch('http://localhost:3001/api/admin/orders', { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch('http://localhost:3001/api/admin/guides', { headers: { 'Authorization': `Bearer ${token}` } }),
       ]);
 
       if (productsRes.ok) setProducts(await productsRes.json());
       if (categoriesRes.ok) setCategories(await categoriesRes.json());
       if (ordersRes.ok) setOrders(await ordersRes.json());
+      if (guidesRes.ok) setGuides(await guidesRes.json());
     } catch (err) {
       console.error('Fehler beim Laden:', err);
     } finally {
@@ -88,6 +93,53 @@ export default function Admin({ user, onNavigate }) {
     }
   };
 
+  const handleDeleteGuide = async (id) => {
+    if (!window.confirm('Guide wirklich löschen?')) return;
+
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`http://localhost:3001/api/admin/guides/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (res.ok) {
+        setGuides(guides.filter(g => g.id !== id));
+        alert('Guide gelöscht! ✓');
+      }
+    } catch (err) {
+      alert('Fehler beim Löschen');
+    }
+  };
+
+  const handleSaveGuide = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const method = editingGuide?.id ? 'PUT' : 'POST';
+      const url = editingGuide?.id
+        ? `http://localhost:3001/api/admin/guides/${editingGuide.id}`
+        : 'http://localhost:3001/api/admin/guides';
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(guideFormData),
+      });
+
+      if (res.ok) {
+        alert(editingGuide?.id ? 'Guide aktualisiert! ✓' : 'Guide erstellt! ✓');
+        setEditingGuide(null);
+        setGuideFormData({});
+        fetchData();
+      }
+    } catch (err) {
+      alert('Fehler beim Speichern');
+    }
+  };
+
   if (!user?.isAdmin) {
     return (
       <div style={{ padding: '3rem 1.5rem', textAlign: 'center' }}>
@@ -121,8 +173,9 @@ export default function Admin({ user, onNavigate }) {
         marginBottom: '2rem',
         borderBottom: `2px solid ${colors.cream}`,
         paddingBottom: '1rem',
+        flexWrap: 'wrap',
       }}>
-        {['products', 'categories', 'orders'].map(tabName => (
+        {['products', 'categories', 'orders', 'guides'].map(tabName => (
           <button
             key={tabName}
             onClick={() => setTab(tabName)}
@@ -139,6 +192,7 @@ export default function Admin({ user, onNavigate }) {
             {tabName === 'products' && '📦 Produkte'}
             {tabName === 'categories' && '📂 Kategorien'}
             {tabName === 'orders' && '📋 Bestellungen'}
+            {tabName === 'guides' && '📚 Guides'}
           </button>
         ))}
       </div>
@@ -396,6 +450,165 @@ export default function Admin({ user, onNavigate }) {
             </div>
           )}
         </Card>
+      )}
+
+      {/* GUIDES TAB */}
+      {tab === 'guides' && (
+        <div>
+          <button
+            onClick={() => {
+              setEditingGuide(null);
+              setGuideFormData({});
+            }}
+            style={{
+              padding: '0.75rem 1.5rem',
+              backgroundColor: colors.gold,
+              color: colors.dark,
+              border: 'none',
+              borderRadius: '0.5rem',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              marginBottom: '1.5rem',
+            }}
+          >
+            + Neuer Guide
+          </button>
+
+          {editingGuide !== undefined && (
+            <Card style={{ marginBottom: '2rem' }}>
+              <h3 style={{ fontWeight: 'bold', marginBottom: '1.5rem', color: colors.dark }}>
+                {editingGuide ? 'Guide bearbeiten' : 'Neuer Guide'}
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <input
+                  type="text"
+                  placeholder="Titel"
+                  value={guideFormData.title || ''}
+                  onChange={(e) => setGuideFormData({ ...guideFormData, title: e.target.value })}
+                  style={{
+                    padding: '0.75rem',
+                    border: `1px solid ${colors.cream}`,
+                    borderRadius: '0.5rem',
+                    fontSize: '1rem',
+                  }}
+                />
+                <input
+                  type="text"
+                  placeholder="Kategorie"
+                  value={guideFormData.category || ''}
+                  onChange={(e) => setGuideFormData({ ...guideFormData, category: e.target.value })}
+                  style={{
+                    padding: '0.75rem',
+                    border: `1px solid ${colors.cream}`,
+                    borderRadius: '0.5rem',
+                    fontSize: '1rem',
+                  }}
+                />
+              </div>
+              <textarea
+                placeholder="Content (Markdown oder HTML)"
+                value={guideFormData.content || ''}
+                onChange={(e) => setGuideFormData({ ...guideFormData, content: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: `1px solid ${colors.cream}`,
+                  borderRadius: '0.5rem',
+                  fontSize: '1rem',
+                  marginTop: '1rem',
+                  minHeight: '250px',
+                  boxSizing: 'border-box',
+                  fontFamily: 'monospace',
+                }}
+              />
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <button
+                  onClick={() => setEditingGuide(undefined)}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    backgroundColor: colors.cream,
+                    color: colors.dark,
+                    border: `1px solid ${colors.logoGreen}`,
+                    borderRadius: '0.5rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Abbrechen
+                </button>
+                <button
+                  onClick={handleSaveGuide}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    backgroundColor: colors.logoGreen,
+                    color: colors.cream,
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Speichern
+                </button>
+              </div>
+            </Card>
+          )}
+
+          <div style={{ display: 'grid', gap: '1rem' }}>
+            {guides.map(guide => (
+              <Card key={guide.id}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                  <div>
+                    <h4 style={{ fontWeight: 'bold', marginBottom: '0.25rem', color: colors.dark }}>
+                      {guide.title}
+                    </h4>
+                    <p style={{ fontSize: '0.875rem', color: colors.textOlive, marginBottom: '0.5rem' }}>
+                      📁 {guide.category}
+                    </p>
+                    <p style={{ fontSize: '0.875rem', color: colors.textOlive }}>
+                      {guide.content.substring(0, 100)}...
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      onClick={() => {
+                        setEditingGuide(guide);
+                        setGuideFormData(guide);
+                      }}
+                      style={{
+                        padding: '0.5rem 1rem',
+                        backgroundColor: colors.gold,
+                        color: colors.dark,
+                        border: 'none',
+                        borderRadius: '0.25rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem',
+                      }}
+                    >
+                      ✏️ Bearbeiten
+                    </button>
+                    <button
+                      onClick={() => handleDeleteGuide(guide.id)}
+                      style={{
+                        padding: '0.5rem 1rem',
+                        backgroundColor: '#dc2626',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '0.25rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem',
+                      }}
+                    >
+                      🗑️ Löschen
+                    </button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

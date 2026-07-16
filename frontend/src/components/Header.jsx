@@ -26,17 +26,18 @@ export default function Header({ cartCount, onNavigate, currentPage, onLogoClick
   };
   return (
     <header style={{
-      backgroundColor: colors.cream,
-      borderBottom: `2px solid ${colors.logoGreen}`,
-      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+      backgroundColor: 'transparent',
+      borderBottom: 'none',
+      boxShadow: 'none',
       position: 'sticky',
       top: 0,
       zIndex: 50,
+      paddingBottom: '3rem',
     }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '1rem 1.5rem' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0.5rem 1.5rem' }}>
 
-        {/* Top Row: Logo + Search + Account */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        {/* Top Row: Logo + Account + Warenkorb */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
 
           {/* Logo in Card */}
           <Card style={{ padding: '0.5rem 0.75rem', backgroundColor: colors.cream }}>
@@ -70,23 +71,6 @@ export default function Header({ cartCount, onNavigate, currentPage, onLogoClick
               </div>
             </button>
           </Card>
-
-          {/* Search Bar */}
-          <div style={{ flex: 1, maxWidth: '400px', margin: '0 2rem' }}>
-            <input
-              type="text"
-              placeholder="🔍 Marke, Produkt oder Kategorie suchen..."
-              style={{
-                width: '100%',
-                padding: '0.5rem 1rem',
-                backgroundColor: colors.cream,
-                border: `1px solid ${colors.logoGreen}`,
-                borderRadius: '0.5rem',
-                fontSize: '0.875rem',
-                color: colors.dark,
-              }}
-            />
-          </div>
 
           {/* Right Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -187,7 +171,6 @@ export default function Header({ cartCount, onNavigate, currentPage, onLogoClick
               {cat.icon} {cat.name}
             </button>
           ))}
-        </nav>
 
           <button
             onClick={() => onNavigate('shop')}
@@ -215,6 +198,38 @@ export default function Header({ cartCount, onNavigate, currentPage, onLogoClick
             📚 Bundles & Anbauanleitungen
           </button>
         </nav>
+
+        {/* Search Bar - Fixed unter Header */}
+        <div style={{
+          position: 'fixed',
+          top: '277px',
+          left: '0',
+          right: '0',
+          display: 'flex',
+          justifyContent: 'center',
+          zIndex: 40,
+          paddingLeft: '1.5rem',
+          paddingRight: '1.5rem',
+          paddingTop: '0.5rem',
+          paddingBottom: '0.5rem',
+          backgroundColor: 'transparent',
+        }}>
+          <div style={{ width: '100%', maxWidth: '600px' }}>
+            <input
+              type="text"
+              placeholder="🔍 Marke, Produkt oder Kategorie suchen..."
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                backgroundColor: '#D9CCBA',
+                border: `1px solid #4B5A3C`,
+                borderRadius: '0.5rem',
+                fontSize: '0.875rem',
+                color: '#1a3a2a',
+              }}
+            />
+          </div>
+        </div>
 
         {/* Category Modal */}
         {selectedCategory && (

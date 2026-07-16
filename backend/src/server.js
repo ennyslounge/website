@@ -494,6 +494,107 @@ async function start() {
   });
 
   // ==========================================
+  // 📚 GUIDES / ANBAUANLEITUNGEN
+  // ==========================================
+
+  // Öffentlich: Alle Guides abrufen
+  app.get('/api/guides', async (req, res) => {
+    try {
+      await db.read();
+      const guides = db.data.guides || [];
+      res.json(guides.sort((a, b) => a.order - b.order));
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Abrufen der Guides' });
+    }
+  });
+
+  // Admin: Alle Guides (für Admin-Panel)
+  app.get('/api/admin/guides', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const guides = db.data.guides || [];
+      res.json(guides);
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Abrufen der Guides' });
+    }
+  });
+
+  // Admin: Neuen Guide erstellen
+  app.post('/api/admin/guides', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const { title, category, content } = req.body;
+
+      if (!title || !category || !content) {
+        return res.status(400).json({ error: 'Titel, Kategorie und Content erforderlich' });
+      }
+
+      const newGuide = {
+        id: Math.max(...(db.data.guides?.map(g => g.id) || [0]), 0) + 1,
+        title,
+        category,
+        content,
+        order: (db.data.guides?.length || 0) + 1,
+        createdAt: new Date(),
+      };
+
+      if (!db.data.guides) {
+        db.data.guides = [];
+      }
+
+      db.data.guides.push(newGuide);
+      await db.write();
+
+      res.status(201).json({ message: 'Guide erstellt!', guide: newGuide });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Erstellen des Guides' });
+    }
+  });
+
+  // Admin: Guide aktualisieren
+  app.put('/api/admin/guides/:id', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const guide = db.data.guides.find(g => g.id === parseInt(req.params.id));
+
+      if (!guide) {
+        return res.status(404).json({ error: 'Guide nicht gefunden' });
+      }
+
+      Object.assign(guide, {
+        title: req.body.title || guide.title,
+        category: req.body.category || guide.category,
+        content: req.body.content || guide.content,
+        order: req.body.order !== undefined ? req.body.order : guide.order,
+      });
+
+      await db.write();
+      res.json({ message: 'Guide aktualisiert!', guide });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Aktualisieren des Guides' });
+    }
+  });
+
+  // Admin: Guide löschen
+  app.delete('/api/admin/guides/:id', verifyAdmin, async (req, res) => {
+    try {
+      await db.read();
+      const index = db.data.guides.findIndex(g => g.id === parseInt(req.params.id));
+
+      if (index === -1) {
+        return res.status(404).json({ error: 'Guide nicht gefunden' });
+      }
+
+      const deleted = db.data.guides.splice(index, 1);
+      await db.write();
+
+      res.json({ message: 'Guide gelöscht!', deleted: deleted[0] });
+    } catch (error) {
+      res.status(500).json({ error: 'Fehler beim Löschen des Guides' });
+    }
+  });
+
+  // ==========================================
   // ERROR HANDLER
   // ==========================================
   app.use((err, req, res, next) => {

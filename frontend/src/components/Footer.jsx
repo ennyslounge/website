@@ -10,9 +10,9 @@ const colors = {
 
 export default function Footer({ onNavigate }) {
   return (
-    <footer style={{ backgroundColor: colors.dark, color: colors.cream, marginTop: '5rem' }}>
+    <footer style={{ backgroundColor: 'transparent', color: colors.cream, marginTop: '5rem' }}>
       {/* Info Section */}
-      <div style={{ backgroundColor: colors.logoGreen, padding: '4rem 1.5rem' }}>
+      <div style={{ backgroundColor: 'transparent', padding: '4rem 1.5rem' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           <h2 style={{
             fontSize: '1.875rem',

@@ -10,20 +10,26 @@ const colors = {
 
 export default function Hero({ onShopClick }) {
   return (
-    <section style={{ backgroundColor: colors.dark, color: colors.cream, padding: '5rem 1.5rem' }}>
+    <section style={{ backgroundColor: 'transparent', color: colors.cream, padding: '4rem 1.5rem' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
 
-        {/* Main Hero */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center', marginBottom: '5rem' }}>
+        {/* Main Hero - Two Column (Mobile: One Column) */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1.2fr 0.8fr',
+          gap: window.innerWidth < 768 ? '2rem' : '4rem',
+          alignItems: 'center',
+          marginBottom: '6rem'
+        }}>
 
-          {/* Left: Text & CTAs */}
+          {/* Left: Text & CTA */}
           <div>
             <p style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '1rem', letterSpacing: '0.1em', color: colors.gold }}>
               EIGENVERSORGUNG · HEADSHOP & GROWSHOP
             </p>
 
             <h1 style={{
-              fontSize: '3.75rem',
+              fontSize: window.innerWidth < 768 ? '2rem' : '3.5rem',
               fontWeight: 'bold',
               fontFamily: 'Georgia, serif',
               marginBottom: '1.5rem',
@@ -34,50 +40,55 @@ export default function Hero({ onShopClick }) {
 
             <p style={{
               fontSize: '1.125rem',
-              marginBottom: '2rem',
-              lineHeight: 1.6,
+              marginBottom: '2.5rem',
+              lineHeight: 1.7,
               color: colors.cream,
             }}>
-              Kurierte Bundles, Anbau-Rezepte in einem Klick und Verbrauchsmaterial im Abo.
-              Ehrlich bepreist, diskret versendet — vom ersten Indoor bis zum Profi-Setup.
+              Kurierte Bundles, Anbau-Rezepte in einem Klick und Verbrauchsmaterial im Abo. Ehrlich bepreist, diskret versendet — vom ersten Indoor bis zum Profi-Setup.
             </p>
 
             {/* CTA Buttons */}
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
               <button
                 onClick={onShopClick}
                 style={{
-                  padding: '0.75rem 2rem',
+                  padding: '1rem 2rem',
                   backgroundColor: colors.gold,
                   color: colors.dark,
                   fontWeight: 'bold',
-                  borderRadius: '0.5rem',
+                  borderRadius: '0.75rem',
                   border: 'none',
                   cursor: 'pointer',
                   fontSize: '1rem',
-                  transition: 'box-shadow 0.2s',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 4px 12px rgba(201, 169, 97, 0.3)',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px rgba(0,0,0,0.3)'}
-                onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(201, 169, 97, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(201, 169, 97, 0.3)';
+                }}
               >
                 Sortiment ansehen
               </button>
 
               <button
-                onClick={onShopClick}
                 style={{
-                  padding: '0.75rem 2rem',
-                  border: `2px solid ${colors.logoGreen}`,
+                  padding: '1rem 2rem',
+                  border: `2px solid ${colors.cream}`,
                   color: colors.cream,
                   fontWeight: 'bold',
-                  borderRadius: '0.5rem',
+                  borderRadius: '0.75rem',
                   backgroundColor: 'transparent',
                   cursor: 'pointer',
                   fontSize: '1rem',
                   transition: 'all 0.2s',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = colors.logoGreen;
+                  e.currentTarget.style.backgroundColor = colors.cream;
                   e.currentTarget.style.color = colors.dark;
                 }}
                 onMouseLeave={(e) => {
@@ -90,53 +101,60 @@ export default function Hero({ onShopClick }) {
             </div>
           </div>
 
-          {/* Right: Logo in Card */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Card style={{ width: '280px', height: '280px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0' }}>
+          {/* Right: Logo Card */}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Card style={{
+              padding: '2rem',
+              textAlign: 'center',
+              backgroundColor: colors.cream,
+              width: window.innerWidth < 768 ? '200px' : '280px',
+              height: window.innerWidth < 768 ? '200px' : '280px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
               <img
                 src="/logo.png"
                 alt="Husky Logo"
-                style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: 0.9 }}
+                style={{ width: '200px', height: '200px', objectFit: 'contain', marginBottom: '1rem' }}
               />
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', fontFamily: 'Georgia, serif', color: colors.logoGreen }}>
+                Enny's
+              </h2>
+              <p style={{ fontSize: '0.75rem', color: colors.textOlive, fontWeight: '600' }}>
+                LOUNGE & GROW STORE
+              </p>
             </Card>
           </div>
         </div>
 
-        {/* Trust Section */}
-        <div style={{ borderTop: `1px solid ${colors.logoGreen}`, paddingTop: '3rem' }}>
+        {/* Trust/Values Section */}
+        <div style={{
+          borderTop: `1px solid rgba(217, 204, 186, 0.3)`,
+          paddingTop: '4rem',
+        }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(5, 1fr)',
-            gap: '2rem',
-            textAlign: 'center',
+            gridTemplateColumns: window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
+            gap: window.innerWidth < 768 ? '1rem' : '2rem',
           }}>
             {[
               { icon: '✓', title: 'LOYALITÄT', desc: 'Dauerhaft fair bepreist' },
-              { icon: '🌿', title: 'NATURVERBUNDENHEIT', desc: 'Nachhaltig & organisch' },
+              { icon: '🌿', title: 'NATUR', desc: 'Nachhaltig & organisch' },
               { icon: '🔓', title: 'FREIHEIT', desc: 'Selbstbestimmtes Wachstum' },
               { icon: '🤝', title: 'EHRLICHKEIT', desc: 'Transparente Kommunikation' },
               { icon: '🌍', title: 'SOUVERÄNITÄT', desc: 'Eigenversorgung fördern' },
             ].map((item, i) => (
               <div key={i} style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                borderRadius: '1rem',
+                textAlign: 'center',
                 padding: '1.5rem',
-                border: `1px solid rgba(255, 255, 255, 0.1)`,
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                e.currentTarget.style.transform = 'translateY(0)';
               }}>
-                <div style={{ fontSize: '2.25rem', marginBottom: '0.75rem' }}>{item.icon}</div>
-                <h3 style={{ fontWeight: 'bold', fontSize: '0.875rem', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+                <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>{item.icon}</div>
+                <h3 style={{ fontWeight: 'bold', fontSize: '0.85rem', letterSpacing: '0.05em', marginBottom: '0.5rem', color: colors.cream }}>
                   {item.title}
                 </h3>
-                <p style={{ fontSize: '0.875rem', color: colors.gold }}>{item.desc}</p>
+                <p style={{ fontSize: '0.85rem', color: colors.gold, lineHeight: 1.5 }}>{item.desc}</p>
               </div>
             ))}
           </div>
