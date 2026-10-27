@@ -28,7 +28,7 @@ ennys-online-shop/
 │   ├── src/
 │   │   └── server.js            # Express API Server
 │   ├── db.json                  # 🎯 JSON-Datenbank (Products, Categories)
-│   ├── .env                     # Konfiguration (PORT, NODE_ENV)
+│   ├── .env.example             # Vorlage für .env (PORT, NODE_ENV, DB, JWT_SECRET)
 │   └── package.json
 ├── .gitignore
 └── README.md
@@ -40,6 +40,7 @@ ennys-online-shop/
 
 ```bash
 cd backend
+cp .env.example .env   # einmalig: Werte in .env eintragen (wird nicht ins Repo geladen)
 npm install
 npm start
 ```
